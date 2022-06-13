@@ -1,5 +1,4 @@
 # issue-tracker
-그룹 프로젝트#5
 
 ---
 ## 팀명 및 팀원 소개
@@ -12,3 +11,12 @@
 |--|--|--|
 |Nori|BE|[Nohriter](https://github.com/nohriter)|
 |Sonya|FE|[onlinekkabchi](https://github.com/onlinekkabchi)|
+
+---
+
+## 그라운드 룰
+
+### 회의시간
+
+- 10:00 ~ 10:30  
+- 17:30 ~ 18:00
