@@ -23,3 +23,12 @@ logging:
     org.hibernate.SQL: debug
     codesquad.backend:
       issuetracker: debug
+
+oauth:
+  github:
+    client_id: a062f7e1bd2cefcb3157
+    client_secret: ${GITHUB_CLIENT_SECRET}
+
+auth:
+  jwt:
+    secret_key: ${JWT_SECRET_KEY}
