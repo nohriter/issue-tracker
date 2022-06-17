@@ -1,4 +1,4 @@
-package codesquad.issuetracker.oauth;
+package codesquad.issuetracker.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

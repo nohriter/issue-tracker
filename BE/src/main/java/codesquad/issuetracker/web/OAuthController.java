@@ -1,5 +1,8 @@
-package codesquad.issuetracker.oauth;
+package codesquad.issuetracker.web;
 
+import codesquad.issuetracker.service.OAuthService;
+import codesquad.issuetracker.web.dto.GithubUserInformation;
+import codesquad.issuetracker.web.jwt.JwtFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import lombok.RequiredArgsConstructor;

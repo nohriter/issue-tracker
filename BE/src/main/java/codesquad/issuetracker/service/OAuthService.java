@@ -1,5 +1,8 @@
-package codesquad.issuetracker.oauth;
+package codesquad.issuetracker.service;
 
+import codesquad.issuetracker.web.dto.GithubAccessToken;
+import codesquad.issuetracker.web.dto.GithubTokenRequestDto;
+import codesquad.issuetracker.web.dto.GithubUserInformation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
