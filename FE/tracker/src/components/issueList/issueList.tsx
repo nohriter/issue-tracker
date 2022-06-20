@@ -21,13 +21,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 
-interface Data {
-    calories: number;
-    carbs: number;
-    fat: number;
-    name: string;
-    protein: number;
-}
+// MUI Theme
+import { ThemeProvider } from "@mui/material/styles";
+import { listTheme } from "../../mui-style/muiTheme";
+
+// Types
+import {
+    Data,
+    HeadCell,
+    Order,
+    EnhancedTableProps,
+    EnhancedTableToolbarProps,
+} from "./IssueLIst.types";
 
 function createData(
     name: string,
@@ -71,8 +76,6 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     return 0;
 }
 
-type Order = "asc" | "desc";
-
 function getComparator<Key extends keyof any>(
     order: Order,
     orderBy: Key
@@ -100,13 +103,6 @@ function stableSort<T>(
         return a[1] - b[1];
     });
     return stabilizedThis.map((el) => el[0]);
-}
-
-interface HeadCell {
-    disablePadding: boolean;
-    id: keyof Data;
-    label: string;
-    numeric: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
@@ -141,18 +137,6 @@ const headCells: readonly HeadCell[] = [
         label: "Protein (g)",
     },
 ];
-
-interface EnhancedTableProps {
-    numSelected: number;
-    onRequestSort: (
-        event: React.MouseEvent<unknown>,
-        property: keyof Data
-    ) => void;
-    onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    order: Order;
-    orderBy: string;
-    rowCount: number;
-}
 
 function EnhancedTableHead(props: EnhancedTableProps) {
     const {
@@ -212,10 +196,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     );
 }
 
-interface EnhancedTableToolbarProps {
-    numSelected: number;
-}
-
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const { numSelected } = props;
 
@@ -249,7 +229,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
                     id="tableTitle"
                     component="div"
                 >
-                    Nutrition
+                    Issue LIst
                 </Typography>
             )}
             {numSelected > 0 ? (
