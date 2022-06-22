@@ -1,9 +1,8 @@
 export interface Data {
-    calories: number;
-    carbs: number;
-    fat: number;
     name: string;
-    protein: number;
+    issueDate: number;
+    writer: number;
+    reviewer: number;
 }
 
 export interface HeadCell {

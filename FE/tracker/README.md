@@ -57,6 +57,8 @@ const context = canvas.getContext("2d");
 
     Further, TypeScript recommends named exports when there are multiple things to export
 
+## [Ways of Getting Data from API in React](https://dev.to/olenadrugalya/ways-of-getting-data-from-api-in-react-2kpf)
+
 <br>
 <br>
 

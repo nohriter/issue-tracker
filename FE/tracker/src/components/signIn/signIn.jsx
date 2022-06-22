@@ -61,10 +61,11 @@ export default function SignIn(props) {
                 <Container
                     component="main"
                     style={{
-                        width: "50%",
+                        width: "400px",
                         height: "auto",
                         position: "absolute",
-                        top: 10,
+                        top: "40px",
+                        left: "25%",
                     }}
                 >
                     <CssBaseline />

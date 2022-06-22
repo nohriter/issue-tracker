@@ -7,44 +7,32 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
 
-import {
-    Data,
-    HeadCell,
-    Order,
-    EnhancedTableProps,
-    EnhancedTableToolbarProps,
-} from "./IssueLIst.types";
+import { Data, HeadCell, EnhancedTableProps } from "./IssueLIst.types";
 
 const headCells: readonly HeadCell[] = [
     {
         id: "name",
         numeric: false,
         disablePadding: true,
-        label: "Dessert (100g serving)",
+        label: "이슈(날짜순)",
     },
     {
-        id: "calories",
-        numeric: true,
-        disablePadding: false,
-        label: "Calories",
+        id: "issueDate",
+        numeric: false,
+        disablePadding: true,
+        label: "날짜",
     },
     {
-        id: "fat",
+        id: "writer",
         numeric: true,
         disablePadding: false,
-        label: "Fat (g)",
+        label: "작성자",
     },
     {
-        id: "carbs",
+        id: "reviewer",
         numeric: true,
         disablePadding: false,
-        label: "Carbs (g)",
-    },
-    {
-        id: "protein",
-        numeric: true,
-        disablePadding: false,
-        label: "Protein (g)",
+        label: "담당자",
     },
 ];
 
