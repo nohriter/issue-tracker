@@ -32,7 +32,7 @@ function Matrix() {
         const intervalPoint = setInterval(() => {
             console.log("matrix drawing");
             drawMatrix();
-        }, 5000);
+        }, 50);
         return () => clearInterval(intervalPoint);
     }, []);
 
