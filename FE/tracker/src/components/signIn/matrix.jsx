@@ -1,3 +1,4 @@
+import { FormControlUnstyledContext } from "@mui/base";
 import React, { useEffect, useRef } from "react";
 
 // function Matrix() {
@@ -64,13 +65,6 @@ import React, { useEffect, useRef } from "react";
 //         });
 //     };
 
-//     const draw = () => {};
-
-//     const tick = () => {
-//         drawMatrix();
-//         setTimeout(tick, 50);
-//     };
-
 //     useEffect(() => {
 //         const intervalPoint = setInterval(() => {
 //             console.log("matrix drawing");
@@ -91,29 +85,41 @@ const canvasHeight = 800;
 let columns = [];
 let maxStackHeight;
 
+const fontSize = 12;
+const slightSmallFontSize = tileSize - 2;
+
 function Matrix() {
     const canvasRef = useRef(null);
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
 
-    const init = () => {
-        maxStackHeight = Math.ceil(ctx.height / tileSize);
+    // divide the canvas into columns.
+    const init = (w, h) => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
 
-        for (let i = 0; i < canvasWidth / tileSize; i++) {
+        maxStackHeight = Math.ceil(w / tileSize);
+
+        for (let i = 0; i < w / tileSize; i++) {
             const column = {};
-
             column.x = i * tileSize;
             column.stackHeight = 10 + Math.random() * maxStackHeight;
             column.stackCounter = 0;
             columns.push(column);
+            console.log(columns);
         }
     };
 
     const draw = () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         ctx.fillStyle = "rgba( 0 , 0 , 0 , " + fadeFactor + " )";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.font = slightSmallFontSize + "px " + "monospace";
+        // ctx.fillStyle = "rgb(0,255,0)";
 
         for (let i = 0; i < columns.length; i++) {
+            // pick a random ascii character 이 부분은 다른 글자로 수정가능할거 같은데 일단 이렇게 놔두기로 함.
+
             const randomCharacter = String.fromCharCode(
                 33 + Math.floor(Math.random() * 94)
             );
@@ -123,22 +129,23 @@ function Matrix() {
                 columns[i].stackCounter * tileSize + tileSize
             );
 
-            if (columns[i].stackCounter++ >= columns[i].stackHeight) {
-                columns[i].stackHeight = 10 + Math.random() * maxStackHeight;
-                columns[i].stackCounter = 0;
-            }
+            // if (columns[i].stackCounter++ >= columns[i].stackHeight) {
+            //     columns[i].stackHeight = 10 + Math.random() * maxStackHeight;
+            //     columns[i].stackCounter = 0;
+            // }
         }
     };
 
     useEffect(() => {
+        init(canvasWidth, canvasHeight);
         const intervalPoint = setInterval(() => {
             console.log("matrix drawing");
             draw();
-        }, 100);
+        }, 2000);
         return () => clearInterval(intervalPoint);
     }, []);
 
-    return <canvas ref={canvasRef} />;
+    return <canvas width={canvasWidth} height={canvasHeight} ref={canvasRef} />;
 }
 
 export default Matrix;

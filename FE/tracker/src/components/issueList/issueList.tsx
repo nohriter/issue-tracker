@@ -1,239 +1,222 @@
-import * as React from "react";
+// 기타 library
 import axios from "axios";
 
-// MUI Material
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+// MUI
+import * as React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TablePagination from "@mui/material/TablePagination";
+import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+import { Typography, Button, Container } from "@mui/material";
+import { Box } from "@mui/system";
+import { setInterval } from "timers/promises";
 
-// MUI Theme
-// import { ThemeProvider } from "@mui/material/styles";
-import { listTheme } from "../../mui-style/muiTheme";
+interface Data {
+    title: string;
+    issueData: string;
+    writer: string;
+    reviewer: string;
+    issueId: number;
+}
 
-// Types
-import { Data, Order } from "./issueLIst.types";
+function createData(
+    title: string,
+    issueData: string,
+    writer: string,
+    reviewer: string,
+    issueId: number
+): Data {
+    return { title, issueData, writer, reviewer, issueId };
+}
 
-// Functions
-import {
-    descendingComparator,
-    getComparator,
-    stableSort,
-    createData,
-} from "./issueList.function.tsx";
-
-// Table Parts
-import EnhancedTableHead from "./issueListHead.tsx";
-import { EnhancedTableToolbar } from "./issueListToolbar.tsx";
-import { setConstantValue } from "typescript";
-
-// const rows = [
-//     createData("dummy1", 305, 3.7, 67, 4.3),
-//     createData("dummy2", 452, 25.0, 51, 4.9),
-//     createData("dummy3", 262, 16.0, 24, 6.0),
-// ];
-
-export default function EnhancedTable() {
-    const [order, setOrder] = React.useState<Order>("asc");
-    const [orderBy, setOrderBy] = React.useState<keyof Data>("writer");
-    const [selected, setSelected] = React.useState<readonly string[]>([]);
-    const [page, setPage] = React.useState(0);
-    const [dense, setDense] = React.useState(false);
-    const [rows, setRows] = React.useState([]);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+function EnhancedTable() {
+    const [rows, setRows] = React.useState(null);
     const [isLoading, setIsLoading] = React.useState(false);
-
-    const handleRequestSort = (
-        event: React.MouseEvent<unknown>,
-        property: keyof Data
-    ) => {
-        const isAsc = orderBy === property && order === "asc";
-        setOrder(isAsc ? "desc" : "asc");
-        setOrderBy(property);
-    };
-
-    const handleSelectAllClick = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        // if (event.target.checked) {
-        //     const newSelecteds = rows.map((n) => n.name);
-        //     setSelected(newSelecteds);
-        //     return;
-        // }
-        // setSelected([]);
-
-        console.log("handleSelectAllClick");
-    };
-
-    const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-        const selectedIndex = selected.indexOf(name);
-        let newSelected: readonly string[] = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1)
-            );
-        }
-
-        setSelected(newSelected);
-    };
-
-    const handleChangePage = (event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDense(event.target.checked);
-    };
-
-    const isSelected = (name: any) => selected.indexOf(name) !== -1;
+    const [pageSize, setPageSize] = React.useState(0);
+    const [totalPage, setTotalPage] = React.useState(0);
 
     const fetchData = () => {
-        return axios
+        const request = axios
             .get(
                 "https://313952d4-dd03-4472-a26f-e82b8c0038da.mock.pstmn.io/api/issues?page=1&status=OPEN"
             )
             .then((res: any) => {
-                const corridor = res.data.issues.map((e) =>
-                    createData(
-                        e.title,
-                        e.createdAt,
-                        e.writer.loginId,
-                        e.writer.loginId
-                    )
-                );
-
-                setRows(corridor);
-
-                console.log("isseus downloaded : ", res.data);
-                console.log("corridor", corridor);
-                console.log("rows", rows);
+                console.log("데이터받는중");
+                setRows(res.data.issues);
+                if (rows !== null) {
+                    setIsLoading(true);
+                    console.log(rows);
+                }
             })
             .catch((error) => console.error(`Error: ${error}`));
     };
 
     React.useEffect(() => {
-        // Postman Api 문서에서 데이터 받아오기
-        console.log("데이터중복방지?");
-        fetchData();
-        setIsLoading(true);
-    }, []);
+        if (isLoading === false) {
+            fetchData();
+            console.log("실행횟수점검");
+        }
+    });
+
+    if (!isLoading) {
+        return <div>Please wait some time...</div>;
+    }
 
     if (isLoading) {
-        // Avoid a layout jump when reaching the last page with empty rows.
-        const emptyRows =
-            page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
         return (
-            <Box sx={{ width: "800px", mt: 5, marginLeft: 10 }}>
-                <Paper sx={{ width: "100%", mb: 2 }}>
-                    <EnhancedTableToolbar numSelected={selected.length} />
-                    <TableContainer>
-                        <Table
-                            sx={{ minWidth: 750 }}
-                            aria-labelledby="tableTitle"
-                            size={dense ? "small" : "medium"}
-                        >
-                            <EnhancedTableHead
-                                numSelected={selected.length}
-                                order={order}
-                                orderBy={orderBy}
-                                onSelectAllClick={handleSelectAllClick}
-                                onRequestSort={handleRequestSort}
-                                rowCount={rows.length}
-                            />
-                            <TableBody>
-                                {rows
-                                    .slice(
-                                        page * rowsPerPage,
-                                        page * rowsPerPage + rowsPerPage
-                                    )
-                                    .map((row, index) => {
-                                        const isItemSelected = isSelected(
-                                            row.name
-                                        );
-                                        const labelId = `enhanced-table-checkbox-${index}`;
+            <>
+                <Container
+                    component="main"
+                    style={{
+                        width: "3000px",
+                        height: "2000px",
+                        position: "absolute",
+                        color: "#000000",
+                    }}
+                >
+                    <TableContainer
+                        component={Paper}
+                        sx={{
+                            maxWidth: 600,
+                            minHeight: 300,
+                            marginTop: 5,
+                            marginLeft: 15,
+                        }}
+                    >
+                        <Box display="flex" alignItems="center">
+                            <Typography
+                                marginLeft="10px"
+                                sx={{ fontSize: "55px", fontWeight: "600" }}
+                            >
+                                Issue List
+                            </Typography>
+                            <Button
+                                variant="outlined"
+                                sx={{
+                                    marginLeft: "170px",
+                                    marginRight: "10px",
+                                    color: "#000000",
+                                    borderColor: "#000000",
+                                    fontSize: "12px",
+                                }}
+                            >
+                                필터
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                sx={{
+                                    marginRight: "20px",
+                                    color: "#000000",
+                                    borderColor: "#000000",
+                                    fontSize: "12px",
+                                }}
+                            >
+                                작성
+                            </Button>
+                        </Box>
 
-                                        return (
-                                            <TableRow hover>
-                                                <TableCell padding="checkbox">
-                                                    <Checkbox
-                                                        color="primary"
-                                                        checked={isItemSelected}
-                                                        inputProps={{
-                                                            "aria-labelledby":
-                                                                labelId,
-                                                        }}
-                                                    />
-                                                </TableCell>
-                                                <TableCell>
-                                                    {row.name}
-                                                </TableCell>
-                                                <TableCell align="right">
-                                                    {row.issueDate}
-                                                </TableCell>
-                                                <TableCell align="right">
-                                                    {row.writer}
-                                                </TableCell>
-                                                <TableCell align="right">
-                                                    {row.reviewer}
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                {emptyRows > 0 && (
-                                    <TableRow
-                                        style={{
-                                            height:
-                                                (dense ? 33 : 53) * emptyRows,
+                        <Table aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell
+                                        align="right"
+                                        sx={{
+                                            fontSize: "15px",
+                                            fontWeight: "500",
                                         }}
                                     >
-                                        <TableCell colSpan={6} />
+                                        이슈
+                                    </TableCell>
+                                    <TableCell
+                                        align="right"
+                                        sx={{
+                                            fontSize: "15px",
+                                            fontWeight: "500",
+                                        }}
+                                    >
+                                        작성날짜
+                                    </TableCell>
+                                    <TableCell
+                                        align="right"
+                                        sx={{
+                                            fontSize: "15px",
+                                            fontWeight: "500",
+                                        }}
+                                    >
+                                        작성자
+                                    </TableCell>
+                                    <TableCell
+                                        align="right"
+                                        sx={{
+                                            fontSize: "15px",
+                                            fontWeight: "500",
+                                        }}
+                                    >
+                                        담당자
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {rows.map((row) => (
+                                    <TableRow
+                                        key={row.issueId}
+                                        sx={{
+                                            "&:last-child td, &:last-child th":
+                                                {
+                                                    border: 0,
+                                                },
+                                            fontSize: "10px",
+                                        }}
+                                    >
+                                        <TableCell
+                                            component="th"
+                                            scope="row"
+                                            sx={{
+                                                fontSize: "15px",
+                                                fontWeight: "500",
+                                            }}
+                                        >
+                                            1{/* {row.title} */}
+                                        </TableCell>
+                                        <TableCell
+                                            align="right"
+                                            sx={{
+                                                fontSize: "15px",
+                                                fontWeight: "500",
+                                            }}
+                                        >
+                                            1
+                                        </TableCell>
+                                        <TableCell
+                                            align="right"
+                                            sx={{
+                                                fontSize: "15px",
+                                                fontWeight: "500",
+                                            }}
+                                        >
+                                            hi
+                                        </TableCell>
+                                        <TableCell
+                                            align="right"
+                                            sx={{
+                                                fontSize: "15px",
+                                                fontWeight: "500",
+                                            }}
+                                        >
+                                            hi
+                                        </TableCell>
                                     </TableRow>
-                                )}
+                                ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={rows.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </Paper>
-                <FormControlLabel
-                    control={
-                        <Switch checked={dense} onChange={handleChangeDense} />
-                    }
-                    label="Dense padding"
-                />
-            </Box>
+                </Container>
+            </>
         );
     }
 }
+
+export default EnhancedTable;

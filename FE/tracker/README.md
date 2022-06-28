@@ -68,6 +68,8 @@ const context = canvas.getContext("2d");
 
 ### [React: 'Redirect' is not exported from 'react-router-dom'](https://stackoverflow.com/questions/63690695/react-redirect-is-not-exported-from-react-router-dom)
 
+### [How to delay page rendering until data received from Api](https://stackoverflow.com/questions/67979782/how-to-delay-page-rendering-until-data-received-from-api)
+
 <br>
 <br>
 

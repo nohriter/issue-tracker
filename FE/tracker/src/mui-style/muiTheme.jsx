@@ -1,4 +1,5 @@
-import { ThemeProvider, createTheme } from "@mui/material";
+import * as React from "react";
+import { createTheme } from "@mui/material";
 
 export const matrixTheme = createTheme({
     palette: {
@@ -20,10 +21,6 @@ export const listTheme = createTheme({
         primary: {
             main: "#121212",
             light: "#f2f2f2",
-        },
-        neutral: {
-            main: "#bdbdbd",
-            dark: "212121",
         },
     },
 });
