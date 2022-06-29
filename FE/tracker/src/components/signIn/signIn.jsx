@@ -1,5 +1,5 @@
 // import * as React, {} from "react";
-import React, { useMemo } from "react";
+import React from "react";
 // import Matrix from "./canvas.jsx";
 
 // Material UI
@@ -12,7 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import Copyright from "./copyright.jsx";
 import { matrixTheme } from "../../mui-style/muiTheme.jsx";
 
@@ -21,37 +21,6 @@ const loginUri =
     "https://github.com/login/oauth/authorize?client_id=2f3993bd2491df08d37b";
 
 export default function SignIn(props) {
-    // const { req: Request, res: Response, next: NextFunction } = props;
-    // const code = req.query.code;
-    // const pathUrl = req.query.state;
-
-    // if (req.query.error) {
-    //     return res.redirect(`${config.get("origin")}/login`);
-    // }
-    // if (!code) {
-    //     return next(new Error("Autorization code not provided!", 401));
-    // }
-    // const {access_token} = await getToken({code});
-
-    // const user = await findAndUpdateUser({email}, {
-    //     email,
-    //     photo:avatar_url,
-    //     name:login,
-    //     provider:'Github',
-    //     verified:true,
-    // },
-    // { runValidators: false, new: true, upsert: true }
-    // );
-
-    // if (!user) {
-    //   return res.redirect(`${config.get<string>('origin')}/oauth/error`);
-    // }
-
-    const handleGithubLogin = (event) => {
-        event.preventDefault();
-        console.log("success");
-    };
-
     return (
         <>
             <Matrix>
